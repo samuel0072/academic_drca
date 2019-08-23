@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +60,7 @@ public class SubjectControllerTest {
      void testGetSubjectSummary() {
         SystemResponse r1, r2, r3;
         SubjectController sc;
-        ArrayList<Object> s;
+        ArrayList<Object> s, a1;
         ArrayList<StudentEnrollment> students;
 
         sub1.addRequirements(sub2);
@@ -94,7 +95,21 @@ public class SubjectControllerTest {
                 () -> assertTrue(s.containsAll(sub1.getRequierements())),
                 () -> assertTrue(s.containsAll(students))
         );
-        //falta testar o caso de nao haver requirements e nao haver estudantes
+        //falta testar o caso de nao haver requirements e nao haver estudantes e nao haver professor
+        studentdb = new mockDatabase<>(sub2);
+        teacherdb = new mockDatabase<>(sub2);
+        sc = new SubjectController(studentdb, teacherdb);
+
+        r3 = sc.getSubjectSummary(sub2);
+        a1 = (ArrayList<Object>) r3.getObject();
+
+
+        assertAll(
+                () -> assertFalse(r3.isError()),
+                () -> assertEquals(0, a1.size())
+        );
+
+
     }
 
 
@@ -280,18 +295,23 @@ public class SubjectControllerTest {
         }
 
         @Override
+        //retorna null se não encontrar resultado
         public<G> G excuteQuery(String query, boolean multiple, Class<G> clazz) {
             G res = null;
 
             if(multiple) {
-                ArrayList<StudentEnrollment> res1 = new ArrayList();
-                fakedb.forEach( (u) -> {
+                List<T> res1;
+                res1 = fakedb.stream().filter(u -> {
+                    boolean a = false;
                     StudentEnrollment b = (StudentEnrollment) u;
-                    if (b.getCurrentSubs().contains(subject)) {
-                        res1.add(b);
+                    if(b.getCurrentSubs().contains(subject)) {
+                        a = true;
                     }
-                });
-                res = (G) res1;
+                    return a;
+                }).collect(Collectors.toList());
+                if(!res1.isEmpty()) {
+                    res = (G) res1;
+                }
             }
             else {
                 List<T> res1;
@@ -304,7 +324,9 @@ public class SubjectControllerTest {
                     }
                     return a;
                 }).collect(Collectors.toList());
-                res = (G)res1.get(0);
+                if(!res1.isEmpty()) {
+                    res = (G)res1.get(0);
+                }
             }
             return res;
 

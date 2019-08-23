@@ -48,14 +48,18 @@ public class SubjectController {
             students = studentDb.excuteQuery(query2, true, ArrayList.class);
 
             requirements = subject.getRequierements();
+            if(students!= null) {
+                students.forEach( u ->  {
+                    r.add(u);
+                });
+            }
+            if(teacher!= null) {
+
+                r.add(teacher.getTeacher().getName());
+            }
             requirements.forEach( u -> {
                 r.add(u);
             });
-            students.forEach( u ->  {
-                r.add(u);
-            });
-            r.add(teacher.getTeacher().getName());
-
             res.ok(r);
         }
         return res;
