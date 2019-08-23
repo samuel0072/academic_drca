@@ -59,6 +59,8 @@ public class SubjectControllerTest {
      void testGetSubjectSummary() {
         SystemResponse r1, r2, r3;
         SubjectController sc;
+        ArrayList<Object> s;
+        ArrayList<StudentEnrollment> students;
 
         sub1.addRequirements(sub2);
 
@@ -75,16 +77,24 @@ public class SubjectControllerTest {
         teacherdb.create(t1);
 
         sc = new SubjectController(studentdb, teacherdb);
+        students = new ArrayList<>();
+        students.add(s1);
+        students.add(s2);
 
         r1 = sc.getSubjectSummary(null);
         r2 = sc.getSubjectSummary(sub1);
 
+        s = (ArrayList<Object>)r2.getObject();
+
         assertAll(
                 () -> assertTrue(r1.isError()),
                 () -> assertFalse(r2.isError()),
-                () -> assertEquals("Disciplina invalida", r1.getObject())
+                () -> assertEquals("disciplina invalida", r1.getObject()),
+                () -> assertTrue(s.contains(t1.getTeacher().getName())),
+                () -> assertTrue(s.containsAll(sub1.getRequierements())),
+                () -> assertTrue(s.containsAll(students))
         );
-
+        //falta testar o caso de nao haver requirements e nao haver estudantes
     }
 
 

@@ -26,7 +26,7 @@ public class SubjectController {
         SystemResponse res = new SystemResponse();
 
         if(subject == null) {
-            res.error("Disciplina invalida");
+            res.error("disciplina invalida");
         }
         else {
             List<Subject> requirements;
@@ -48,10 +48,13 @@ public class SubjectController {
             students = studentDb.excuteQuery(query2, true, ArrayList.class);
 
             requirements = subject.getRequierements();
-
-            r.add(requirements);
+            requirements.forEach( u -> {
+                r.add(u);
+            });
+            students.forEach( u ->  {
+                r.add(u);
+            });
             r.add(teacher.getTeacher().getName());
-            r.add(students);
 
             res.ok(r);
         }
