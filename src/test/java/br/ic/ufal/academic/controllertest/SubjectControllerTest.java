@@ -11,8 +11,8 @@ import org.hibernate.engine.spi.FilterDefinition;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,12 +34,12 @@ public class SubjectControllerTest {
 
     public mockDatabase<StudentEnrollment> studentdb;
     public mockDatabase<TeacherEnrollment> teacherdb;
-    StudentEnrollment s1, s2;
-    TeacherEnrollment t1, t2;
-    Subject sub1, sub2;
+    public StudentEnrollment s1, s2;
+    public TeacherEnrollment t1, t2;
+    public Subject sub1, sub2;
 
     @BeforeEach
-    public void setup() {
+     void setup() {
         s1 = new StudentEnrollment(new Student("Samuel"), 1, new Department(),
                 0, new Course(), types.GRAD, new ArrayList<>(), new ArrayList<>());
         s2 = new StudentEnrollment(new Student("Eric"), 3, new Department(),
@@ -55,7 +56,7 @@ public class SubjectControllerTest {
 
 
     @Test
-    public void testGetSubjectSummary() {
+     void testGetSubjectSummary() {
         SystemResponse r1, r2, r3;
         SubjectController sc;
 
@@ -69,6 +70,10 @@ public class SubjectControllerTest {
         studentdb = new mockDatabase<>(sub1);
         teacherdb = new mockDatabase<>(sub1);
 
+        studentdb.create(s1);
+        studentdb.create(s2);
+        teacherdb.create(t1);
+
         sc = new SubjectController(studentdb, teacherdb);
 
         r1 = sc.getSubjectSummary(null);
@@ -76,7 +81,8 @@ public class SubjectControllerTest {
 
         assertAll(
                 () -> assertTrue(r1.isError()),
-                () -> assertFalse(r2.isError())
+                () -> assertFalse(r2.isError()),
+                () -> assertEquals("Disciplina invalida", r1.getObject())
         );
 
     }
@@ -278,17 +284,17 @@ public class SubjectControllerTest {
                 res = (G) res1;
             }
             else {
-                TeacherEnrollment res1;
+                List<T> res1;
 
-                res1 = (TeacherEnrollment) fakedb.stream().filter(u -> {
+                res1 =  fakedb.stream().filter(u -> {
                     boolean a = false;
                     TeacherEnrollment b = (TeacherEnrollment)u;
                     if(b.getSubjects().contains(subject)){
                         a = true;
                     }
                     return a;
-                });
-
+                }).collect(Collectors.toList());
+                res = (G)res1.get(0);
             }
             return res;
 

@@ -3,6 +3,7 @@ package br.ufal.ic.academic.model;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,6 +33,7 @@ public class TeacherEnrollment{
     public TeacherEnrollment(Teacher teacher, int number) {
         this.number = (number);
         this.teacher = teacher;
+        this.subjects = new ArrayList<>();
     }
 
     public void addCurrentSubject(Subject sub) {
