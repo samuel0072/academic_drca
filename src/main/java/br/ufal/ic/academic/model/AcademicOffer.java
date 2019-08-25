@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(appliesTo = "ACADEMICOFFER")
-public class AcademicOffer {
+public class AcademicOffer implements Model{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -25,19 +25,35 @@ public class AcademicOffer {
 
     public AcademicOffer() {
     }
-    public AcademicOffer(int year, int period, Course course) {
+    public AcademicOffer(int year, int period, Course course, List<Subject> subs) {
         this.year = year;
         this.period = period;
         this.course = course;
+        this.subjects = subs;
 
     }
 
     public void addSub(Subject sub) {
-        this.subjects.add(sub);
+        if(sub.isOkay()) {
+            this.subjects.add(sub);
+        }
     }
 
-    public  void removeSub(Subject sub) {
-        this.subjects.remove(sub);
-    }
+    public boolean isOkay() {
+        boolean ok = true;
 
+        if(this.subjects == null) {
+            ok = false;
+        }
+        else if(this.period <= 0) {
+            ok = false;
+        }
+        else if(this.year <= 0 ){
+            ok = false;
+        }
+        else if(this.course == null || !this.course.isOkay()) {
+            ok = false;
+        }
+        return ok;
+    }
 }

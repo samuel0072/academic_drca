@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table
-public class Subject {
+public class Subject implements Model{
 
 
     @Id
@@ -58,4 +58,29 @@ public class Subject {
     }
 
 
+    public boolean isOkay() {
+        boolean ok = true;
+        if(this.name == null || this.name == "") {
+            ok = false;
+        }
+        else if(this.code == null || this.code == "") {
+            ok = false;
+        }
+        else if(this.credits < 0) {
+            ok = false;
+        }
+        else if(this.minCredits < 0 ) {
+            ok = false;
+        }
+        else if(this.type == null) {
+            ok = false;
+        }
+        else if(this.course == null || !this.course.isOkay()) {
+            ok = false;
+        }
+        else if(this.requierements == null) {
+            ok = false;
+        }
+        return ok;
+    }
 }

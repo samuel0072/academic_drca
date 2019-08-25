@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table
 
-public class StudentEnrollment{
+public class StudentEnrollment implements Model{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,12 +30,10 @@ public class StudentEnrollment{
     private int credits;
 
     @ManyToMany
-    @Column(nullable = true)
     private List<Subject> currentSubs;
 
     @ManyToMany
-    @Column(nullable = true)
-     private List<Subject> takenSubs;
+    private List<Subject> takenSubs;
 
     @ManyToOne
     private Course course;
@@ -75,6 +73,32 @@ public class StudentEnrollment{
     public void addCredits(int credits) {
         if(credits > 0)
             this.credits += credits;
+    }
+
+    public boolean isOkay() {
+        boolean ok = true;
+
+        if(this.student == null || this.course == null) {
+            ok = false;
+        }
+        else if((!student.isOkay()) || (!this.course.isOkay())
+            || (!this.studentDepart.isOkay())) {
+            ok = false;
+        }
+        else if(this.number < 0) {
+            ok = false;
+        }
+        else if(this.credits < 0 ) {
+            ok = false;
+        }
+        else if((this.currentSubs == null) || (this.takenSubs == null)) {
+            ok = false;
+        }
+        else if(this.type == null) {
+            ok = false;
+        }
+
+        return ok;
     }
 }
 

@@ -6,12 +6,13 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Getter
 @Entity
 @Table
-public class Secretary {
+public class Secretary implements Model{
 
 
     @Id
@@ -22,14 +23,26 @@ public class Secretary {
     private types type;
     @OneToOne
     @Setter
-    private AcademicOffer offer;
+    private List<AcademicOffer> offers;
 
     public Secretary() {
 
     }
-    public Secretary(types type) {
+    public Secretary(types type, List<AcademicOffer> offers) {
+        this.offers = offers;
         this.type = type;
     }
+    public void addOffer(AcademicOffer offer) {
+        if(offer.isOkay()) {
+            this.offers.add(offer);
+        }
+    }
 
-
+    public boolean isOkay() {
+        boolean ok = true;
+        if(this.offers == null) {
+            ok = false;
+        }
+        return ok;
+    }
 }

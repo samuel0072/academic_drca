@@ -3,14 +3,13 @@ package br.ufal.ic.academic.model;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
 @Table
 @Getter
-public class TeacherEnrollment{
+public class TeacherEnrollment implements Model{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,15 +29,29 @@ public class TeacherEnrollment{
 
     }
 
-    public TeacherEnrollment(Teacher teacher, int number) {
+    public TeacherEnrollment(Teacher teacher, int number, List<Subject> subs) {
         this.number = (number);
         this.teacher = teacher;
-        this.subjects = new ArrayList<>();
+        this.subjects = subs;
     }
 
     public void addCurrentSubject(Subject sub) {
-        if(sub!= null) {
+        if(!sub.isOkay()) {
             subjects.add(sub);
         }
+    }
+
+    public boolean isOkay() {
+        boolean ok = true;
+        if(this.number <= 0) {
+            ok = false;
+        }
+        else if(teacher == null || !this.teacher.isOkay()) {
+            ok = false;
+        }
+        else if(subjects == null) {
+            ok = false;
+        }
+        return ok;
     }
 }

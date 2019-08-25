@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table
-public class Department {
+public class Department implements Model{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,4 +29,17 @@ public class Department {
 
     }
 
+    public boolean isOkay() {
+        boolean ok = true;
+        if(this.name == null || this.name == "") {
+            ok = false;
+        }
+        else if(this.graduationSec == null || this.postGradSec == null) {
+            ok = false;
+        }
+        else if(!this.graduationSec.isOkay() || !this.postGradSec.isOkay()) {
+            ok = false;
+        }
+        return ok;
+    }
 }

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table
-public class Student {
+public class Student implements Model{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,5 +23,14 @@ public class Student {
 
     public Student(String name) {
         this.name = name;
+    }
+
+    public boolean isOkay() {
+        boolean ok = true;
+
+        if(name == null || name == "") {
+            ok = false;
+        }
+        return ok;
     }
 }
