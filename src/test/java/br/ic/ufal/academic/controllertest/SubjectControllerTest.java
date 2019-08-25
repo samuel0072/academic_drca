@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SubjectControllerTest {
 
-    public mockDatabase<StudentEnrollment> studentdb;
-    public mockDatabase<TeacherEnrollment> teacherdb;
+    public mockDatabase studentdb;
+    public mockDatabase teacherdb;
     public StudentEnrollment s1, s2;
     public TeacherEnrollment t1, t2;
     public Subject sub1, sub2;
@@ -46,8 +46,8 @@ public class SubjectControllerTest {
         s2 = new StudentEnrollment(new Student("Eric"), 3, new Department(),
                 0, new Course(), types.GRAD, new ArrayList<>(), new ArrayList<>());
 
-        t1 = new TeacherEnrollment(new Teacher("Willy"), 2);
-        t2 = new TeacherEnrollment(new Teacher("Paes"), 3);
+        t1 = new TeacherEnrollment(new Teacher("Willy"), 2, new ArrayList<>());
+        t2 = new TeacherEnrollment(new Teacher("Paes"), 3, new ArrayList<>());
 
         sub1 = new Subject("Teste", "Comp000", 100, 90,
                 types.GRAD, new Course(), new ArrayList<>());
@@ -70,8 +70,8 @@ public class SubjectControllerTest {
         s1.addSubCurrent(sub1);
         s2.addSubCurrent(sub1);
 
-        studentdb = new mockDatabase<>(sub1);
-        teacherdb = new mockDatabase<>(sub1);
+        studentdb = new mockDatabase(sub1);
+        teacherdb = new mockDatabase(sub1);
 
         studentdb.create(s1);
         studentdb.create(s2);
@@ -96,8 +96,8 @@ public class SubjectControllerTest {
                 () -> assertTrue(s.containsAll(students))
         );
         //falta testar o caso de nao haver requirements e nao haver estudantes e nao haver professor
-        studentdb = new mockDatabase<>(sub2);
-        teacherdb = new mockDatabase<>(sub2);
+        studentdb = new mockDatabase(sub2);
+        teacherdb = new mockDatabase(sub2);
         sc = new SubjectController(studentdb, teacherdb);
 
         r3 = sc.getSubjectSummary(sub2);
@@ -113,8 +113,8 @@ public class SubjectControllerTest {
     }
 
 
-    public class mockDatabase<T> extends Database<T> {
-        private ArrayList<T> fakedb;
+    public class mockDatabase extends Database {
+        private ArrayList<Model> fakedb;
 
         private Subject subject;
 
@@ -300,7 +300,7 @@ public class SubjectControllerTest {
             G res = null;
 
             if(multiple) {
-                List<T> res1;
+                List<Model> res1;
                 res1 = fakedb.stream().filter(u -> {
                     boolean a = false;
                     StudentEnrollment b = (StudentEnrollment) u;
@@ -314,7 +314,7 @@ public class SubjectControllerTest {
                 }
             }
             else {
-                List<T> res1;
+                List<Model> res1;
 
                 res1 =  fakedb.stream().filter(u -> {
                     boolean a = false;
@@ -332,8 +332,10 @@ public class SubjectControllerTest {
 
         }
 
-        public T create(T object) {
-            this.fakedb.add(object);
+        public Model create(Model object) {
+            if(object.isOkay()) {
+                this.fakedb.add(object);
+            }
             return object;
         }
 

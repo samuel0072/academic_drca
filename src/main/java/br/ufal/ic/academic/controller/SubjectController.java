@@ -11,11 +11,11 @@ import java.util.List;
 
 public class SubjectController {
 
-    Database<StudentEnrollment> studentDb;
-    Database<TeacherEnrollment> teacherDb;
+    Database studentDb;
+    Database teacherDb;
 
-    public SubjectController(Database<StudentEnrollment> studentDb,
-                             Database<TeacherEnrollment> teacherDb) {
+    public SubjectController(Database studentDb,
+                             Database teacherDb) {
         this.studentDb = studentDb;
         this.teacherDb = teacherDb;
 

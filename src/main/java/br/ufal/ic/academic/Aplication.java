@@ -21,11 +21,11 @@ public class Aplication  extends Application<AplicationConfig> {
 
     @Override
     public void run(AplicationConfig config, Environment environment) {
-        Database<Student> studentDb = new Database<>(hibernate.getSessionFactory());
-        Database<StudentEnrollment> studentEnrollmentDb = new Database<>(hibernate.getSessionFactory());
-        Database<Subject> subDb = new Database<>(hibernate.getSessionFactory());
-        Database<Department> departDb = new Database<>(hibernate.getSessionFactory());
-        Database<Secretary> secDb = new Database<>(hibernate.getSessionFactory());
+        Database studentDb = new Database(hibernate.getSessionFactory());
+        Database studentEnrollmentDb = new Database(hibernate.getSessionFactory());
+        Database subDb = new Database(hibernate.getSessionFactory());
+        Database departDb = new Database(hibernate.getSessionFactory());
+        Database secDb = new Database(hibernate.getSessionFactory());
 
 
         //environment.jersey().register(new StudentResource(studentDb));

@@ -78,7 +78,7 @@ public class StudentEnrollment implements Model{
     public boolean isOkay() {
         boolean ok = true;
 
-        if(this.student == null || this.course == null) {
+        if(this.student == null || this.course == null || this.studentDepart == null) {
             ok = false;
         }
         else if((!student.isOkay()) || (!this.course.isOkay())

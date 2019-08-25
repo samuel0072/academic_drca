@@ -14,7 +14,6 @@ public class Student implements Model{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column
-    @Setter
     private String name;
 
     public Student() {

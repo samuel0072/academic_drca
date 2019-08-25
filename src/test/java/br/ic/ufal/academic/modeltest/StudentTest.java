@@ -12,31 +12,43 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StudentTest {
 
     Student student;
+    Course cc;
+    Secretary grad;
+    Secretary post;
+    Department ic;
 
     @BeforeEach
     void setup() {
-        student = new Student("Eric");
+        student = new Student("Samuel");
+        grad = new Secretary(types.GRAD, new ArrayList<>());
+        post = new Secretary(types.POST, new ArrayList<>());
+        ic = new Department("IC", grad, post);
+        cc = new Course("cc", ic);
 
     }
     @Test
     void initStudentTest() {
         Student a = new Student("Samuel");
-        String name = a.getName();
+        Student b = new Student();
         assertAll(
                 () -> assertNotNull(a),
-                () ->assertEquals(name, "Samuel"),
-                () -> assertNull(a.getId())
+                () ->assertEquals("Samuel", a.getName()),
+                () -> assertNull(a.getId()),
+                () -> assertNull(b.getName())
         );
     }
 
     @Test
     void getSetStudentTest() {
-        String name = "Samuel";
-        student.setName(name);
+        Student a = new Student("Samuel");
+        Student b = new Student();
+        Student c = new Student("");
         assertAll(
-                () -> assertNotNull(student.getName()),
-                () -> assertEquals(student.getName(), name),
-                () -> assertNull(student.getId())
+                () -> assertNotNull(a.getName()),
+                () -> assertEquals("Samuel", a.getName()),
+                () -> assertNull(a.getId()),
+                () -> assertNull(b.getName()),
+                () -> assertEquals("", c.getName())
         );
     }
 
@@ -123,6 +135,48 @@ public class StudentTest {
         assertAll(
                 () -> assertEquals(2, taken.size()),
                 () -> assertEquals(1, current.size())
+        );
+    }
+
+    @Test
+    void isOkayTest() {
+        Student a = new Student("Samuel");
+        Student b = new Student();
+        Student c = new Student("");
+        StudentEnrollment a1 = new StudentEnrollment(a, 1, ic, 0, cc, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment b1 = new StudentEnrollment(new Student(), 1, ic, 0, cc, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment c1 = new StudentEnrollment(a, -1, ic, 0, cc, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment d1 = new StudentEnrollment(null,-1, ic, 0, cc, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment e1 = new StudentEnrollment(a, 1, null, 0, cc, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment f1 = new StudentEnrollment(a, 1, ic, 0, null, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment g1 = new StudentEnrollment(a, 1, ic, 0, cc, null,
+                new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment h1 = new StudentEnrollment(a, 1, ic, 0, cc, types.GRAD,
+                null, new ArrayList<>());
+        StudentEnrollment i1 = new StudentEnrollment(a, 1, ic, 0, cc, types.GRAD,
+                new ArrayList<>(), null);
+        StudentEnrollment j1 = new StudentEnrollment(a, 1, ic, -1, cc, types.GRAD,
+                new ArrayList<>(), new ArrayList<>());
+        assertAll(
+                () -> assertTrue(a.isOkay()),
+                () -> assertFalse(b.isOkay()),
+                () -> assertFalse(c.isOkay()),
+                () -> assertTrue(a1.isOkay()),
+                () -> assertFalse(j1.isOkay()),
+                () -> assertFalse(b1.isOkay()),
+                () -> assertFalse(c1.isOkay()),
+                () -> assertFalse(d1.isOkay()),
+                () -> assertFalse(e1.isOkay()),
+                () -> assertFalse(f1.isOkay()),
+                () -> assertFalse(g1.isOkay()),
+                () -> assertFalse(h1.isOkay()),
+                () -> assertFalse(i1.isOkay())
         );
     }
 }

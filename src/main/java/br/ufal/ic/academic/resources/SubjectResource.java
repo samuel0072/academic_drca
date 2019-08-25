@@ -38,7 +38,7 @@ public class SubjectResource {
     @UnitOfWork
     @Path("/subject/{id}")
     public Response findOne(@PathParam("id") Long id) {
-        Subject target =  (Subject) db.findById(Subject.class, id);
+        Subject target =  (Subject) db.findById(id);
         return Response.ok(target).build();
     }
 
@@ -46,7 +46,7 @@ public class SubjectResource {
     @UnitOfWork
     @Path("/subject/{id}/delete")
     public Response deleteById(@PathParam("id") Long id) {
-        db.deleteById(Subject.class, id);
+        db.deleteById(id);
         return Response.ok().build();
     }
 
@@ -54,8 +54,8 @@ public class SubjectResource {
     @UnitOfWork
     @Path("/subject/{id}/addrequirement/{recid}")
     public Response updateById(@PathParam("id") Long id, @PathParam("recid")Long recid) {
-        Subject c = (Subject) db.findById(Subject.class, id);
-        Subject d = (Subject) db.findById(Subject.class, recid);
+        Subject c = (Subject) db.findById(id);
+        Subject d = (Subject) db.findById(recid);
 
         c.addRequirements(d);
         db.updateById(c);
