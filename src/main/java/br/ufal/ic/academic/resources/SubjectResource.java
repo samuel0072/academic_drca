@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/academic")
+@Produces(MediaType.APPLICATION_JSON)
 public class SubjectResource {
 
     private Database db;

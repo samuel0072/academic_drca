@@ -40,7 +40,7 @@ public class Database extends AbstractDAO<Model>{
         currentSession().delete(findById(id));
     }
 
-    public void updateById(Model s) {
+    public void update(Model s) {
         if(s.isOkay()) {
             currentSession().saveOrUpdate(s);
         }

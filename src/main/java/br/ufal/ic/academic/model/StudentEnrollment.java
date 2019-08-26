@@ -23,8 +23,6 @@ public class StudentEnrollment implements Model{
     @OneToOne
     private Student student;
 
-    @ManyToOne
-    private Department studentDepart;
 
     @Column
     private int credits;
@@ -43,11 +41,10 @@ public class StudentEnrollment implements Model{
 
     public StudentEnrollment() {
     }
-    public  StudentEnrollment(Student student, int number, Department dp, int cred,
+    public  StudentEnrollment(Student student, int number, int cred,
                               Course course, types type, List<Subject> currentSubs, List<Subject> takenSubs) {
         this.number = number;
         this.student = student;
-        this.studentDepart = dp;
         this.credits = cred;
         this.course = course;
         this.type = type;
@@ -79,11 +76,10 @@ public class StudentEnrollment implements Model{
     public boolean isOkay() {
         boolean ok = true;
 
-        if(this.student == null || this.course == null || this.studentDepart == null) {
+        if(this.student == null || this.course == null ) {
             ok = false;
         }
-        else if((!student.isOkay()) || (!this.course.isOkay())
-            || (!this.studentDepart.isOkay())) {
+        else if((!student.isOkay()) || (!this.course.isOkay())) {
             ok = false;
         }
         else if(this.number < 0) {

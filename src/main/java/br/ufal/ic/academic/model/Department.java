@@ -15,36 +15,18 @@ public class Department implements Model{
     private Long id;
     @Column
     private String name;
-    @OneToOne
-    private Secretary graduationSec;
-    @OneToOne
-    private Secretary postGradSec;
 
     public Department(){
 
     }
-    public Department(String name, Secretary grad, Secretary post){
+    public Department(String name){
         this.name = name;
-        this.graduationSec = grad;
-        this.postGradSec = post;
 
     }
 
     public boolean isOkay() {
         boolean ok = true;
         if(this.name == null || this.name == "") {
-            ok = false;
-        }
-        else if(this.graduationSec == null || this.postGradSec == null) {
-            ok = false;
-        }
-        else if(!this.graduationSec.isOkay() || !this.postGradSec.isOkay()) {
-            ok = false;
-        }
-        else if(this.graduationSec.getType() != types.GRAD) {
-            ok = false;
-        }
-        else if(this.postGradSec.getType() != types.POST) {
             ok = false;
         }
         return ok;

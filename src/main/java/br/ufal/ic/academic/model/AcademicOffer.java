@@ -31,8 +31,9 @@ public class AcademicOffer implements Model{
 
     }
 
+    //so adiciona se estiver tudo okay com a disciplina e forem do mesmo curso
     public void addSub(Subject sub) {
-        if(sub.isOkay()) {
+        if(sub.isOkay() && sub.getCourse() == this.course) {
             this.subjects.add(sub);
         }
     }

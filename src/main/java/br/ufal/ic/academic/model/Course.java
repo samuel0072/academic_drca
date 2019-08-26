@@ -15,13 +15,13 @@ public class Course  implements  Model{
     @Column
     private String name;
     @ManyToOne
-    private Department department;
+    private Secretary sec;
 
     public Course() {
 
     }
-    public Course(String name, Department dp) {
-        this.department = dp;
+    public Course(String name, Secretary sec) {
+        this.sec = sec;
         this.name = name;
     }
 
@@ -30,7 +30,7 @@ public class Course  implements  Model{
         if(this.name == null || this.name == "") {
             ok = false;
         }
-        if(this.department == null || !this.department.isOkay()) {
+        if(this.sec == null || !this.sec.isOkay()) {
             ok = false;
         }
         return ok;

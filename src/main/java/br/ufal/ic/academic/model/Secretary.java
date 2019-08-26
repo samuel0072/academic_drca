@@ -21,26 +21,20 @@ public class Secretary implements Model{
     private Long id;
     @Column
     private types type;
-    @OneToMany
-    @Setter
-    private List<AcademicOffer> offers;
+    @ManyToOne
+    private Department dp;
 
     public Secretary() {
 
     }
-    public Secretary(types type, List<AcademicOffer> offers) {
-        this.offers = offers;
+    public Secretary(types type, Department dp) {
+        this.dp = dp;
         this.type = type;
-    }
-    public void addOffer(AcademicOffer offer) {
-        if(offer.isOkay()) {
-            this.offers.add(offer);
-        }
     }
 
     public boolean isOkay() {
         boolean ok = true;
-        if(this.offers == null) {
+        if(this.dp == null || !this.dp.isOkay()) {
             ok = false;
         }
         else if(this.type == null) {
