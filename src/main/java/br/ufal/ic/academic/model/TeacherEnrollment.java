@@ -36,7 +36,7 @@ public class TeacherEnrollment implements Model{
     }
 
     public void addCurrentSubject(Subject sub) {
-        if(!sub.isOkay()) {
+        if(sub.isOkay()) {
             subjects.add(sub);
         }
     }

@@ -11,13 +11,10 @@ import java.util.List;
 
 public class SubjectController {
 
-    Database studentDb;
-    Database teacherDb;
+    Database db;
 
-    public SubjectController(Database studentDb,
-                             Database teacherDb) {
-        this.studentDb = studentDb;
-        this.teacherDb = teacherDb;
+    public SubjectController(Database db) {
+        this.db = db;
 
     }
 
@@ -43,9 +40,9 @@ public class SubjectController {
             query2 = "select B.* from STUDENTENROLLMENT_SUBJECT A,  STUDENTENROLLMENT B where A.CURRENTSUBS_ID = "
                     + subject.getId() + " and A.STUDENTENROLLMENT_ID = B.ID";
 
-            teacher = teacherDb.excuteQuery(query1, false, TeacherEnrollment.class);
+            teacher = db.excuteQuery(query1, false, TeacherEnrollment.class);
 
-            students = studentDb.excuteQuery(query2, true, ArrayList.class);
+            students = db.excuteQuery(query2, true, ArrayList.class);
 
             requirements = subject.getRequierements();
             if(students!= null) {
@@ -54,7 +51,6 @@ public class SubjectController {
                 });
             }
             if(teacher!= null) {
-
                 r.add(teacher.getTeacher().getName());
             }
             requirements.forEach( u -> {

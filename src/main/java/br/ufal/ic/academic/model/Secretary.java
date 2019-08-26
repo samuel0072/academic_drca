@@ -21,7 +21,7 @@ public class Secretary implements Model{
     private Long id;
     @Column
     private types type;
-    @OneToOne
+    @OneToMany
     @Setter
     private List<AcademicOffer> offers;
 
@@ -41,6 +41,9 @@ public class Secretary implements Model{
     public boolean isOkay() {
         boolean ok = true;
         if(this.offers == null) {
+            ok = false;
+        }
+        else if(this.type == null) {
             ok = false;
         }
         return ok;

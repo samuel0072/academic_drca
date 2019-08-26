@@ -1,5 +1,6 @@
 package br.ufal.ic.academic.model;
 
+import br.ufal.ic.academic.util.types;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -38,6 +39,12 @@ public class Department implements Model{
             ok = false;
         }
         else if(!this.graduationSec.isOkay() || !this.postGradSec.isOkay()) {
+            ok = false;
+        }
+        else if(this.graduationSec.getType() != types.GRAD) {
+            ok = false;
+        }
+        else if(this.postGradSec.getType() != types.POST) {
             ok = false;
         }
         return ok;

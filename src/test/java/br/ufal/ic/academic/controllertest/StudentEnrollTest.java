@@ -1,4 +1,4 @@
-package br.ic.ufal.academic.controllertest;
+package br.ufal.ic.academic.controllertest;
 
 import br.ufal.ic.academic.controller.StudentEnrollControler;
 import br.ufal.ic.academic.model.*;
@@ -29,27 +29,28 @@ public class StudentEnrollTest {
     void enrollSubTest() {
         Subject p3, c1, paa;
         ArrayList<Subject> req = new ArrayList<>();
-        StudentEnrollment r, s;
+        StudentEnrollment r, s, t;
 
         SystemResponse r1, r2, r3, r4, r5, r6, r7, r8;
 
-        p3  = new Subject("P3", "COMP215", 100, 60, types.GRAD, cc, new ArrayList<>());
+        p3  = new Subject("P3", "COMP215", 0, 60, types.GRAD, cc, new ArrayList<>());
         req.add(p3);
         c1  = new Subject("Calculo 1", "COMP210", 100, 60, types.GRAD, cc, req);
         paa = new Subject("PAA", "MCM", 100, 60, types.POST, cc, new ArrayList<>());
         r  = new StudentEnrollment(new Student(), 111, ic, 200, cc, types.POST, new ArrayList<>(), new ArrayList<>());
         s = new StudentEnrollment(new Student(), 112, new Department(), 200, new Course(), types.POST, new ArrayList<>(), new ArrayList<>());
+        t = new StudentEnrollment(new Student("Samuel"), 311, ic, 160, cc,
+                types.GRAD, new ArrayList<>(), new ArrayList<>());
 
         r1 = controller.enrollSub(null, a);//disciplina invalida
         r2 = controller.enrollSub(c1, a);//creditos insulficientes
-        a.addCredits(160);
-        r3 = controller.enrollSub(c1, a);//nao tem todos os pre-requisitos
-        a.addSubTaken(p3);
-        r4 = controller.enrollSub(p3, a);//nao pode cursar de novo
+        r3 = controller.enrollSub(c1, t);//nao tem todos os pre-requisitos
+        t.addSubTaken(p3);
+        r4 = controller.enrollSub(p3, t);//nao pode cursar de novo
         r5 = controller.enrollSub(p3, r);//pos não pode cursar grad
-        r6 = controller.enrollSub(paa, a);//aluno de graducao com creditos insulficiente para pos
+        r6 = controller.enrollSub(paa, t);//aluno de graducao com creditos insulficiente para pos
         r7 = controller.enrollSub(paa, s);//departamentos diferentes
-        r8 = controller.enrollSub(c1, a);//matriculou
+        r8 = controller.enrollSub(c1, t);//matriculou
 
 
         assertAll(

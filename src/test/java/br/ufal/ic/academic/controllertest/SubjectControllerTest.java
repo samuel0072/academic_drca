@@ -1,4 +1,4 @@
-package br.ic.ufal.academic.controllertest;
+package br.ufal.ic.academic.controllertest;
 
 import br.ufal.ic.academic.controller.SubjectController;
 import br.ufal.ic.academic.database.Database;
@@ -33,26 +33,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SubjectControllerTest {
 
-    public mockDatabase studentdb;
-    public mockDatabase teacherdb;
+    public mockDatabase db;
     public StudentEnrollment s1, s2;
     public TeacherEnrollment t1, t2;
     public Subject sub1, sub2;
+    public Department ic;
+    public Course cc;
 
     @BeforeEach
      void setup() {
-        s1 = new StudentEnrollment(new Student("Samuel"), 1, new Department(),
-                0, new Course(), types.GRAD, new ArrayList<>(), new ArrayList<>());
-        s2 = new StudentEnrollment(new Student("Eric"), 3, new Department(),
-                0, new Course(), types.GRAD, new ArrayList<>(), new ArrayList<>());
+        ic = new Department("IC", new Secretary(types.GRAD, new ArrayList<>()),
+                new Secretary(types.POST, new ArrayList<>()));
+        cc = new Course("CC", ic);
+        s1 = new StudentEnrollment(new Student("Samuel"), 1, ic,
+                0, cc, types.GRAD, new ArrayList<>(), new ArrayList<>());
+        s2 = new StudentEnrollment(new Student("Eric"), 3, ic,
+                0, cc, types.GRAD, new ArrayList<>(), new ArrayList<>());
 
         t1 = new TeacherEnrollment(new Teacher("Willy"), 2, new ArrayList<>());
         t2 = new TeacherEnrollment(new Teacher("Paes"), 3, new ArrayList<>());
 
         sub1 = new Subject("Teste", "Comp000", 100, 90,
-                types.GRAD, new Course(), new ArrayList<>());
+                types.GRAD, cc, new ArrayList<>());
         sub2 =  new Subject("P3", "Comp001", 100, 90,
-                types.GRAD, new Course(), new ArrayList<>());
+                types.GRAD, cc, new ArrayList<>());
     }
 
 
@@ -70,14 +74,13 @@ public class SubjectControllerTest {
         s1.addSubCurrent(sub1);
         s2.addSubCurrent(sub1);
 
-        studentdb = new mockDatabase(sub1);
-        teacherdb = new mockDatabase(sub1);
+        db = new mockDatabase(sub1);
 
-        studentdb.create(s1);
-        studentdb.create(s2);
-        teacherdb.create(t1);
+        db.create(s1);
+        db.create(s2);
+        db.create(t1);
 
-        sc = new SubjectController(studentdb, teacherdb);
+        sc = new SubjectController(db);
         students = new ArrayList<>();
         students.add(s1);
         students.add(s2);
@@ -92,13 +95,14 @@ public class SubjectControllerTest {
                 () -> assertFalse(r2.isError()),
                 () -> assertEquals("disciplina invalida", r1.getObject()),
                 () -> assertTrue(s.contains(t1.getTeacher().getName())),
+                //todo: verificar por que o corno do database não adiciona o teacher
                 () -> assertTrue(s.containsAll(sub1.getRequierements())),
                 () -> assertTrue(s.containsAll(students))
         );
         //falta testar o caso de nao haver requirements e nao haver estudantes e nao haver professor
-        studentdb = new mockDatabase(sub2);
-        teacherdb = new mockDatabase(sub2);
-        sc = new SubjectController(studentdb, teacherdb);
+        db = new mockDatabase(sub2);
+        db = new mockDatabase(sub2);
+        sc = new SubjectController(db);
 
         r3 = sc.getSubjectSummary(sub2);
         a1 = (ArrayList<Object>) r3.getObject();
@@ -302,12 +306,18 @@ public class SubjectControllerTest {
             if(multiple) {
                 List<Model> res1;
                 res1 = fakedb.stream().filter(u -> {
-                    boolean a = false;
-                    StudentEnrollment b = (StudentEnrollment) u;
-                    if(b.getCurrentSubs().contains(subject)) {
-                        a = true;
+                    if(u.getClass() == StudentEnrollment.class) {
+                        boolean a = false;
+                        StudentEnrollment b = (StudentEnrollment) u;
+                        if(b.getCurrentSubs().contains(subject)) {
+                            a = true;
+                        }
+                        return a;
                     }
-                    return a;
+                    else {
+                        return false;
+                    }
+
                 }).collect(Collectors.toList());
                 if(!res1.isEmpty()) {
                     res = (G) res1;
@@ -317,12 +327,18 @@ public class SubjectControllerTest {
                 List<Model> res1;
 
                 res1 =  fakedb.stream().filter(u -> {
-                    boolean a = false;
-                    TeacherEnrollment b = (TeacherEnrollment)u;
-                    if(b.getSubjects().contains(subject)){
-                        a = true;
+                    if(u.getClass() == TeacherEnrollment.class) {
+                        boolean a = false;
+                        TeacherEnrollment b = (TeacherEnrollment)u;
+                        if(b.getSubjects().contains(subject)){
+                            a = true;
+                        }
+                        return a;
                     }
-                    return a;
+                    else {
+                        return false;
+                    }
+
                 }).collect(Collectors.toList());
                 if(!res1.isEmpty()) {
                     res = (G)res1.get(0);

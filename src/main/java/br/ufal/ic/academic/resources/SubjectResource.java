@@ -1,30 +1,44 @@
 package br.ufal.ic.academic.resources;
 
+import br.ufal.ic.academic.controller.SubjectController;
 import br.ufal.ic.academic.database.Database;
 import br.ufal.ic.academic.model.*;
+import br.ufal.ic.academic.util.SystemResponse;
+import br.ufal.ic.academic.util.types;
 import io.dropwizard.hibernate.UnitOfWork;
+import lombok.Builder;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
-@Path("/admin")
+@Path("/academic")
 public class SubjectResource {
 
     private Database db;
-    private Database studentEnrollmentDb;
-    private Database teacherDb;
 
-    /*@POST
+    public SubjectResource() {
+    }
+    public SubjectResource(Database db) {
+        this.db = db;
+    }
+
+    @POST
     @UnitOfWork
-    @Path("/subject/{name}")
-    public Response create(@PathParam("name") String name, @QueryParam("code") String code,
-                           @QueryParam("credits")int credits, @QueryParam("mincredits")int mincred,
-                           @QueryParam("graduation")boolean grad) {
-        Subject d = new Subject(name, code, credits, mincred, grad);
-        db.create(d);
+    @Path("/subject/")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response create(@FormParam("name") String name,@FormParam("code") String code,
+                           @FormParam("credits")int credits,@FormParam("mincred") int mincred,
+                           @FormParam("type")types type,@FormParam("courseid") Long courseId) {
+        //String name = request.getParameter("name");
+        Course course = (Course) db.findById(courseId);
+        Subject d = new Subject(name, code, credits, mincred, type,course,new ArrayList<>());
+        d = (Subject)db.create(d);
         return Response.ok(d).build();
-    }*/
+    }
 
     @GET
     @UnitOfWork
@@ -63,33 +77,14 @@ public class SubjectResource {
         return Response.ok(c).build();
     }
 
-    /*@GET
+    @GET
     @UnitOfWork
     @Path("/subject/{id}/report")
 
     public Response getReport(@PathParam("id")Long id){
-        Subject c = (Subject) db.findById(Subject.class, id);
-        List<StudentEnrollment> students = studentEnrollmentDb.findAll(StudentEnrollment.class);
-        List<TeacherEnrollment> teachers = teacherDb.findAll(TeacherEnrollment.class);
-
-        List<StudentEnrollment> studentsres = new ArrayList<>();
-        TeacherEnrollment d = null;
-        for(StudentEnrollment a : students) {
-            if(a.getCurrentSubs().contains(c)) {
-                studentsres.add(a);
-            }
-        }
-        for(TeacherEnrollment a: teachers ) {
-            if(a.getSubjects().contains(c)) {
-                d = a;
-                break;
-            }
-        }
-        ArrayList<Object> res = new ArrayList<>();
-        res.add(c);
-        res.add(students);
-        res.add(d);
-
+        Subject sub =(Subject) db.findById(id);
+        SubjectController c = new SubjectController(db);
+        SystemResponse res = c.getSubjectSummary(sub);
         return Response.ok(res).build();
-    }*/
+    }
 }

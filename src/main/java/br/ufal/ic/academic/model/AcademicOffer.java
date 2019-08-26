@@ -1,7 +1,6 @@
 package br.ufal.ic.academic.model;
 
 import lombok.Getter;
-import org.hibernate.annotations.Entity;
 import org.hibernate.annotations.Table;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(appliesTo = "ACADEMICOFFER")
 public class AcademicOffer implements Model{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

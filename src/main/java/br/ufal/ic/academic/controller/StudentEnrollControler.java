@@ -46,7 +46,6 @@ public class StudentEnrollControler {
         }
         else{
             student.addSubCurrent(sub);
-            student.addCredits(sub.getCredits());
             res.ok("matriculado");
         }
         return res;

@@ -2,6 +2,7 @@ package br.ufal.ic.academic;
 
 import br.ufal.ic.academic.database.Database;
 import br.ufal.ic.academic.model.*;
+import br.ufal.ic.academic.resources.SubjectResource;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -21,17 +22,9 @@ public class Aplication  extends Application<AplicationConfig> {
 
     @Override
     public void run(AplicationConfig config, Environment environment) {
-        Database studentDb = new Database(hibernate.getSessionFactory());
-        Database studentEnrollmentDb = new Database(hibernate.getSessionFactory());
-        Database subDb = new Database(hibernate.getSessionFactory());
-        Database departDb = new Database(hibernate.getSessionFactory());
-        Database secDb = new Database(hibernate.getSessionFactory());
+        Database db = new Database(hibernate.getSessionFactory());
 
-
-        //environment.jersey().register(new StudentResource(studentDb));
-        /*environment.jersey().register(new StudentEnrollmentResource(studentEnrollmentDb, studentDb, subDb, departDb));
-        environment.jersey().register(new DepartmentResource(departDb, secDb, studentEnrollmentDb));*/
-
+        environment.jersey().register(new SubjectResource(db));
 
     }
 

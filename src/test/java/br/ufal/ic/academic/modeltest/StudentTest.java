@@ -1,4 +1,4 @@
-package br.ic.ufal.academic.modeltest;
+package br.ufal.ic.academic.modeltest;
 
 import br.ufal.ic.academic.model.*;
 import br.ufal.ic.academic.util.types;
@@ -92,9 +92,9 @@ public class StudentTest {
                 () -> assertEquals(0, enroll1.getCredits()),
                 () -> assertEquals(123, enroll1.getNumber())
         );
-        enroll1.addCredits(-1);
+        //enroll1.addCredits(-1);
         assertNotEquals(-1, enroll1.getCredits());
-        enroll1.addCredits(1);
+        //enroll1.addCredits(1);
         assertEquals(1, enroll1.getCredits());
     }
 

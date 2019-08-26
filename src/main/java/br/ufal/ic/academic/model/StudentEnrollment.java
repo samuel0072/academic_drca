@@ -67,10 +67,11 @@ public class StudentEnrollment implements Model{
         if(sub!= null)
             if(!takenSubs.contains(sub)) {
                 this.takenSubs.add(sub);
+                this.addCredits(sub.getCredits());
             }
     }
 
-    public void addCredits(int credits) {
+    private void addCredits(int credits) {
         if(credits > 0)
             this.credits += credits;
     }

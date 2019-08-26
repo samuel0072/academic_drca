@@ -25,7 +25,7 @@ public class Teacher implements Model{
     }
 
     public boolean isOkay() {
-        boolean ok = false;
+        boolean ok = true;
         if(this.name == null || this.name == "") {
             ok = false;
         }
