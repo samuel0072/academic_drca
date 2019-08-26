@@ -39,15 +39,16 @@ public class SubjectControllerTest {
     public Subject sub1, sub2;
     public Department ic;
     public Course cc;
+    public  Secretary sec;
 
     @BeforeEach
      void setup() {
-        ic = new Department("IC", new Secretary(types.GRAD, new ArrayList<>()),
-                new Secretary(types.POST, new ArrayList<>()));
-        cc = new Course("CC", ic);
-        s1 = new StudentEnrollment(new Student("Samuel"), 1, ic,
+        ic = new Department("IC");
+        sec = new Secretary(types.GRAD, ic);
+        cc = new Course("CC", sec);
+        s1 = new StudentEnrollment(new Student("Samuel"), 1,
                 0, cc, types.GRAD, new ArrayList<>(), new ArrayList<>());
-        s2 = new StudentEnrollment(new Student("Eric"), 3, ic,
+        s2 = new StudentEnrollment(new Student("Eric"), 3,
                 0, cc, types.GRAD, new ArrayList<>(), new ArrayList<>());
 
         t1 = new TeacherEnrollment(new Teacher("Willy"), 2, new ArrayList<>());

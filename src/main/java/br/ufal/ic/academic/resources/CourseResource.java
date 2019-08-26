@@ -32,4 +32,14 @@ public class CourseResource {
         cc = (Course) db.create(cc);
         return Response.ok(cc).build();
     }
+
+    @GET
+    @UnitOfWork
+    @Path("/course/{id}/student")
+    public Response findAllCourse(@PathParam("id") Long id) {
+        Course cc = (Course) db.findById(id);
+        String query = "select A.* from STUDENTENROLMENT  A where A.COURSE_ID _ID="+id;
+        ArrayList<Course> courses = (ArrayList<Course>)db.excuteQuery(query, true, ArrayList.class);
+        return Response.ok(courses).build();
+    }
 }

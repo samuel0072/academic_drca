@@ -19,11 +19,11 @@ public class StudentTest {
 
     @BeforeEach
     void setup() {
+        ic = new Department("IC");
         student = new Student("Samuel");
-        grad = new Secretary(types.GRAD, new ArrayList<>());
-        post = new Secretary(types.POST, new ArrayList<>());
-        ic = new Department("IC", grad, post);
-        cc = new Course("cc", ic);
+        grad = new Secretary(types.GRAD, ic);
+        post = new Secretary(types.POST, ic);
+        cc = new Course("cc", grad);
 
     }
     @Test
@@ -55,7 +55,7 @@ public class StudentTest {
     @Test
     void initEnrollTest() {
         StudentEnrollment e = new StudentEnrollment();
-        StudentEnrollment b = new StudentEnrollment(new Student(), 002, new Department(), 1, new Course(), types.GRAD, new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment b = new StudentEnrollment(new Student(), 002, 1, new Course(), types.GRAD, new ArrayList<>(), new ArrayList<>());
 
         assertAll(
                 () -> assertNotNull(e),
@@ -65,7 +65,6 @@ public class StudentTest {
                 () -> assertNotNull(b.getCourse()),
                 () -> assertNotNull(b.getStudent()),
                 () -> assertNotNull(b.getNumber()),
-                () -> assertNotNull(b.getStudentDepart()),
                 () -> assertNotNull(b.getTakenSubs()),
                 () -> assertNotNull(b.getCurrentSubs()),
                 () -> assertNull(b.getId())
@@ -80,11 +79,10 @@ public class StudentTest {
         ArrayList<Subject> taken = new ArrayList<>();
         ArrayList<Subject> current = new ArrayList<>();
 
-        StudentEnrollment enroll1 = new StudentEnrollment(student, 123, d, 0, c, types.GRAD, current, taken);
+        StudentEnrollment enroll1 = new StudentEnrollment(student, 123, 0, c, types.GRAD, current, taken);
 
         assertAll(
                 () -> assertEquals(student, enroll1.getStudent()),
-                () -> assertEquals(d, enroll1.getStudentDepart() ),
                 () -> assertEquals(c, enroll1.getCourse()),
                 () -> assertEquals(taken, enroll1.getTakenSubs()),
                 () -> assertEquals(current, enroll1.getCurrentSubs()),
@@ -92,10 +90,6 @@ public class StudentTest {
                 () -> assertEquals(0, enroll1.getCredits()),
                 () -> assertEquals(123, enroll1.getNumber())
         );
-        //enroll1.addCredits(-1);
-        assertNotEquals(-1, enroll1.getCredits());
-        //enroll1.addCredits(1);
-        assertEquals(1, enroll1.getCredits());
     }
 
     @Test
@@ -104,7 +98,7 @@ public class StudentTest {
         Subject sub2 = new Subject();
         ArrayList<Subject> taken = new ArrayList<>();
         ArrayList<Subject> current = new ArrayList<>();
-        StudentEnrollment enroll = new StudentEnrollment(student, 123, new Department(), 0, new Course(), types.GRAD, current, taken);
+        StudentEnrollment enroll = new StudentEnrollment(student, 123, 0, new Course(), types.GRAD, current, taken);
 
         enroll.addSubCurrent(sub);
         enroll.addSubCurrent(null);
@@ -143,25 +137,23 @@ public class StudentTest {
         Student a = new Student("Samuel");
         Student b = new Student();
         Student c = new Student("");
-        StudentEnrollment a1 = new StudentEnrollment(a, 1, ic, 0, cc, types.GRAD,
+        StudentEnrollment a1 = new StudentEnrollment(a, 1, 0, cc, types.GRAD,
                 new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment b1 = new StudentEnrollment(new Student(), 1, ic, 0, cc, types.GRAD,
+        StudentEnrollment b1 = new StudentEnrollment(new Student(), 1,  0, cc, types.GRAD,
                 new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment c1 = new StudentEnrollment(a, -1, ic, 0, cc, types.GRAD,
+        StudentEnrollment c1 = new StudentEnrollment(a, -1,  0, cc, types.GRAD,
                 new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment d1 = new StudentEnrollment(null,-1, ic, 0, cc, types.GRAD,
+        StudentEnrollment d1 = new StudentEnrollment(null,-1,  0, cc, types.GRAD,
                 new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment e1 = new StudentEnrollment(a, 1, null, 0, cc, types.GRAD,
+        StudentEnrollment f1 = new StudentEnrollment(a, 1, 0, null, types.GRAD,
                 new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment f1 = new StudentEnrollment(a, 1, ic, 0, null, types.GRAD,
+        StudentEnrollment g1 = new StudentEnrollment(a, 1, 0, cc, null,
                 new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment g1 = new StudentEnrollment(a, 1, ic, 0, cc, null,
-                new ArrayList<>(), new ArrayList<>());
-        StudentEnrollment h1 = new StudentEnrollment(a, 1, ic, 0, cc, types.GRAD,
+        StudentEnrollment h1 = new StudentEnrollment(a, 1, 0, cc, types.GRAD,
                 null, new ArrayList<>());
-        StudentEnrollment i1 = new StudentEnrollment(a, 1, ic, 0, cc, types.GRAD,
+        StudentEnrollment i1 = new StudentEnrollment(a, 1, 0, cc, types.GRAD,
                 new ArrayList<>(), null);
-        StudentEnrollment j1 = new StudentEnrollment(a, 1, ic, -1, cc, types.GRAD,
+        StudentEnrollment j1 = new StudentEnrollment(a, 1, -1, cc, types.GRAD,
                 new ArrayList<>(), new ArrayList<>());
         assertAll(
                 () -> assertTrue(a.isOkay()),
@@ -172,7 +164,6 @@ public class StudentTest {
                 () -> assertFalse(b1.isOkay()),
                 () -> assertFalse(c1.isOkay()),
                 () -> assertFalse(d1.isOkay()),
-                () -> assertFalse(e1.isOkay()),
                 () -> assertFalse(f1.isOkay()),
                 () -> assertFalse(g1.isOkay()),
                 () -> assertFalse(h1.isOkay()),

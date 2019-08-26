@@ -73,7 +73,7 @@ public class SubjectResource {
         Subject d = (Subject) db.findById(recid);
 
         c.addRequirements(d);
-        db.updateById(c);
+        db.update(c);
 
         return Response.ok(c).build();
     }

@@ -62,12 +62,11 @@ public class StudentResource {
     @Path("/student/enroll")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response createEnroll(@FormParam("studentid") Long id,@FormParam("enrollnumber")int enrollnumber,
-                                 @FormParam("departmentid") Long dpid,@FormParam("credits") int cred,
+                                 @FormParam("credits") int cred,
                                  @FormParam("courseid") Long courseid,@FormParam("type") types type) {
         Student d = (Student) db.findById(id);
-        Department dp = (Department) db.findById(dpid);
         Course cc = (Course) db.findById(courseid);
-        StudentEnrollment c = new StudentEnrollment(d, enrollnumber, dp, cred, cc, type, new ArrayList<>(), new ArrayList<>());
+        StudentEnrollment c = new StudentEnrollment(d, enrollnumber, cred, cc, type, new ArrayList<>(), new ArrayList<>());
         c = (StudentEnrollment) db.create(c);
         return Response.ok(c).build();
     }

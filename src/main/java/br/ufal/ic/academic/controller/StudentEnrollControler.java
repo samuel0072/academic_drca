@@ -13,7 +13,7 @@ public class StudentEnrollControler {
     //requisito 1 e 2
     public SystemResponse enrollSub(Subject sub, StudentEnrollment student) {
         SystemResponse res = new SystemResponse();
-        if(sub == null) {
+        if(sub == null || !sub.isOkay() || !student.isOkay()) {
             res.error("Disciplina invalida!");
             return res;
         }
@@ -41,7 +41,7 @@ public class StudentEnrollControler {
                 res.error("creditos insulficientes");
             }
         }
-        else if(student.getStudentDepart() != sub.getCourse().getDepartment()) {
+        else if(student.getCourse().getSec().getDp() != sub.getCourse().getSec().getDp()) {
             res.error("departamentos diferentes");
         }
         else{

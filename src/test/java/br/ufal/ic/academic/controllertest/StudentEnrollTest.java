@@ -16,12 +16,14 @@ public class StudentEnrollTest {
     Department ic;
     Course cc;
     StudentEnrollControler controller;
+    Secretary sec;
 
     @BeforeEach
     void setup() {
-        ic = new Department("IC", new Secretary(), new Secretary());
-        cc = new Course("CC", ic);
-        a = new StudentEnrollment(new Student("Samuel"), 311, ic, 0, cc, types.GRAD, new ArrayList<>(), new ArrayList<>());
+        ic = new Department("IC");
+         sec = new Secretary(types.GRAD, ic);
+        cc = new Course("CC", sec);
+        a = new StudentEnrollment(new Student("Samuel"), 311, 0, cc, types.GRAD, new ArrayList<>(), new ArrayList<>());
         controller = new StudentEnrollControler();
     }
 
@@ -30,6 +32,7 @@ public class StudentEnrollTest {
         Subject p3, c1, paa;
         ArrayList<Subject> req = new ArrayList<>();
         StudentEnrollment r, s, t;
+        Secretary sec2 = new Secretary(types.POST, new Department("CC"));
 
         SystemResponse r1, r2, r3, r4, r5, r6, r7, r8;
 
@@ -37,9 +40,9 @@ public class StudentEnrollTest {
         req.add(p3);
         c1  = new Subject("Calculo 1", "COMP210", 100, 60, types.GRAD, cc, req);
         paa = new Subject("PAA", "MCM", 100, 60, types.POST, cc, new ArrayList<>());
-        r  = new StudentEnrollment(new Student(), 111, ic, 200, cc, types.POST, new ArrayList<>(), new ArrayList<>());
-        s = new StudentEnrollment(new Student(), 112, new Department(), 200, new Course(), types.POST, new ArrayList<>(), new ArrayList<>());
-        t = new StudentEnrollment(new Student("Samuel"), 311, ic, 160, cc,
+        r  = new StudentEnrollment(new Student("Samuel"), 111, 200, cc, types.POST, new ArrayList<>(), new ArrayList<>());
+        s = new StudentEnrollment(new Student("Eric"), 112,  200, new Course("JC", sec2), types.POST, new ArrayList<>(), new ArrayList<>());
+        t = new StudentEnrollment(new Student("Samuel"), 311, 160, cc,
                 types.GRAD, new ArrayList<>(), new ArrayList<>());
 
         r1 = controller.enrollSub(null, a);//disciplina invalida
